@@ -144,7 +144,7 @@ Stack caminoHastaNodoInsertado(Map m, Node* insertado) {
 }
 
 Node* segundoTop( Stack s ) {
-///Denota el top que queda de hacer popS
+///Denota el top que queda de hacer popS (osea, el que este debajo del tope)
 ///Vuelve a dejar el stack como estaba
     Node* tmp;
     Node* tmpPush = topS(s);
@@ -176,7 +176,7 @@ void balancear(Map m, Node* insertado) {
     Stack claves = caminoHastaNodoInsertado(m, insertado);
     int iter = sizeS(claves); ///Usado en caso de que destruya el stack
     Node* tmp = topS(claves);
-    Node* tmpPadre = segundoTop(claves));
+    Node* tmpPadre = segundoTop(claves);
 
     while ( iter > 1 ) {
         if( nodosOrdenados(tmpPadre) ) {
@@ -194,7 +194,7 @@ void balancear(Map m, Node* insertado) {
             popS(claves);
             pushS(claves,tmp);
             tmp = topS(claves);
-            tmpPadre = segundoTop(claves));
+            tmpPadre = segundoTop(claves);
         }
     }
 
@@ -239,8 +239,6 @@ void insertM(Map m, Key k, Value v) {
     ///Esto me posiciona el puntero tmp en el lugar en donde deberia insertar un nuevo nodo
     ///Corta cuando encuentro el nodo con la clave, o cuando encuentro el nodo en NULL
 
-        Node* padreTmp = tmp; /// <??> Funciona? Me estoy intentando guardar el padre
-
     ///tmp se guarda una referencia al nodo. Si modifico tmp, modifico tambien el nodo (NO es una deep copy)
         if ( k > tmp->clave ) {
             tmp = tmp->hijoDer;
@@ -260,15 +258,105 @@ void insertM(Map m, Key k, Value v) {
     delete padreTmp;
 }
 
+/// ///////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
+/// R E M O V E
+/// ///////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////
 
+Node* claveANodo(Node* raiz, Key k){
+    // la clave se encuentra en el map
+    Node* actual;
+    if (raiz -> clave != k){
+        if (raiz -> clave > k){
+            actual = claveANodo(raiz -> hijoIzq, k);
+        } else {
+            actual = claveANodo(raiz -> hijoDer, k);
+        }
+    } else {
+        actual = raiz;
+    }
+    return actual;
+}
 
+Node* padre(Node* elems, Key k){
+    // la clave pertenece al map
+    Node* padreActual;
+    if((elems -> hijoIzq != NULL && elems -> hijoIzq -> clave == k) || (elems -> hijoDer != NULL && elems -> hijoDer -> clave == k)){
+        padreActual = elems;
+    } else {
+        if (k < elems -> clave){
+            padreActual = padre(elems -> hijoIzq, k);
+        } else {
+            padreActual = padre(elems -> hijoDer, k);
+        }
+    }
+    return padreActual;
+}
 
+bool esElHijoIzquierdo(Node* n, Node* m){
+    return n -> hijoIzq != NULL && n -> hijoIzq -> clave == m -> clave;
+}
 
+bool pertenece(Node* n, Key k){
+///Denota True si existe un nodo con la clave k en un arbol
+/// O(n)
+    return (n != NULL) && (n -> clave == k ||
+           (k < n -> clave && pertenece(n -> hijoIzq, k)) ||
+           (k > n -> clave && pertenece(n -> hijoDer, k)));
+}
 
+Node* sucesor(Node* n) {
+    Node* res = n;
+    if(n != NULL && n -> hijoIzq != NULL){
+        res = sucesor(n -> hijoIzq);
+    }
+    return res;
+}
+
+void _removeM(Node* raiz, Node* n){
+    ///Recibo la raiz y el nodo a remover como nodos puntero
+
+    if (n -> hijoDer == NULL){
+    ///Sin sucesor (que no es la raiz)
+        Node* p = padre(raiz, n -> clave);
+        if (esElHijoIzquierdo(p, n)){
+            p -> hijoIzq = n -> hijoIzq;
+        } else {
+            p -> hijoDer = n -> hijoIzq;
+        }
+        delete n;
+    } else {
+        Node* s = sucesor(n -> hijoDer);
+        if (s -> clave == n -> hijoDer -> clave){
+            n -> hijoDer = s -> hijoDer;
+        } else {
+            padre(raiz, s -> clave) -> hijoIzq = s -> hijoDer;
+        }
+        n -> clave = s -> clave;
+        n -> valor = s -> valor;
+        delete s;
+    }
+}
 
 void removeM(Map m, Key k) {
-
-    //COMPLETAR(removeM);
+    if (pertenece(m -> raiz , k)){
+        m -> tam--; ///Reducir 1 el tamaño
+        if (m -> raiz -> clave == k && m -> raiz -> hijoDer == NULL) {
+            ///Si la raiz es el elemento que quiero remover, y NO tengo hijo derecho (y :. tampoco sucesor que sea el menor de los mayores)
+            ///Solamente borro la raiz y me quedo con su arbol a la izquierda (si, funciona, hace el dibujo xd)
+            Node* tmp = m -> raiz;
+            m -> raiz = m -> raiz -> hijoIzq;
+            delete tmp;
+        } else {
+            ///Caso que tengo raiz y tengo los dos hijos, Ó que quiero sacar algo que no sea la raiz
+            _removeM(m -> raiz, claveANodo(m -> raiz, k));
+        }
+    }
 }
 
 void _destroyM(Node* raiz) {

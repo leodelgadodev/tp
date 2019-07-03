@@ -23,18 +23,6 @@ bool elemN(Network net, Id id) {
     return lookupM(net->flechas, id, v);
 }
 
-void connectN(Network net, Id id1, Id id2) {
-
-    if (!connectedN(net, id1, id2)) {
-
-    } ///Si ya estan conectados, no hacer nada, solo agregar a la pila.
-
-    /// Inserto en la pila el elemento que se apunta a si mismo (tras seguir toda una linea de conexiones
-    /// que parte de id1).
-    ///pushS(net->acciones,x')
-
-}
-
 Id representante(Network net, Id id) {
     ///Sigue las flechas y denota el ultimo valor
 
@@ -52,8 +40,29 @@ bool connectedN(Network net, Id id1, Id id2) {
     return representante(net, id1) == representante(net, id2);
 }
 
+void connectN(Network net, Id id1, Id id2) {
+
+    if (!connectedN(net, id1, id2)) {
+
+    } ///Si ya estan conectados, no hacer nada, solo agregar a la pila.
+
+    /// Inserto en la pila el elemento que se apunta a si mismo (tras seguir toda una linea de conexiones
+    /// que parte de id1).
+    ///pushS(net->acciones,x')
+
+}
+
+
 void undoN(Network net) {
-    COMPLETAR(undoN);
+    Id numero = topS(net -> acciones);
+    Value v;
+    lookupM(net -> flechas, numero, v);
+    if(elem == v){
+        removeM(net -> flechas, numero);
+    } else{
+        insertM(net -> flechas, numero, numero);
+    }
+    popS(net -> acciones);
 }
 
 void destroyN(Network net) {

@@ -41,6 +41,8 @@
 		<Unit filename="Network.h" />
 		<Unit filename="Stack.cpp" />
 		<Unit filename="Stack.h" />
+		<Unit filename="StackAuxiliar.cpp" />
+		<Unit filename="StackAuxiliar.h" />
 		<Unit filename="Test.cpp" />
 		<Unit filename="Test.h" />
 		<Extensions>
