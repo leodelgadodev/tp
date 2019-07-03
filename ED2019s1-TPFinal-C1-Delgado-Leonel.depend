@@ -1,0 +1,44 @@
+# depslib dependency file v1.0
+1561572495 source:/home/leo/Desktop/tp-estructuras/Main.cpp
+	<cassert>
+	<map>
+	"Common.h"
+	"Map.h"
+	"Test.h"
+
+1560210565 /home/leo/Desktop/tp-estructuras/Common.h
+	<ctime>
+	<cstdio>
+	<cstdlib>
+	<cassert>
+	<iostream>
+
+1560210565 /home/leo/Desktop/tp-estructuras/Map.h
+
+1560210565 /home/leo/Desktop/tp-estructuras/Test.h
+
+1562004061 source:/home/leo/Desktop/tp-estructuras/Map.cpp
+	"Common.h"
+	"Map.h"
+
+1561572768 source:/home/leo/Desktop/tp-estructuras/Stack.cpp
+	"Common.h"
+	"Stack.h"
+
+1560210565 /home/leo/Desktop/tp-estructuras/Stack.h
+
+1560210565 source:/home/leo/Desktop/tp-estructuras/Test.cpp
+	<iostream>
+	<string>
+	<cstdlib>
+	<vector>
+	"Stack.h"
+	"Map.h"
+	"Network.h"
+
+1560210565 /home/leo/Desktop/tp-estructuras/Network.h
+
+1560973096 source:/home/leo/Desktop/tp-estructuras/Network.cpp
+	"Common.h"
+	"Network.h"
+
